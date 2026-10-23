@@ -48,7 +48,7 @@ int main() {
 
   /* filtering */
   for (auto i{0}; i < data.size(); i++) {
-    bes(data[i]);
+    f_data[i] = bes(data[i]);
     // save data to file
     file << i << '\t' << data[i] << '\t' << f_data[i] << "\r\n";
   }
