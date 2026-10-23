@@ -15,6 +15,8 @@ int main() {
   const double amp = 1.0;
   const double max_noise_percentage = 0.36;
   const double max_amp_noise = amp * max_noise_percentage;
+  const double noise_freq = 70.0;
+  const size_t max_noise_counter = 1 / (dt * noise_freq);
 
   std::random_device seed;
   std::array<double, 100> data;
@@ -22,7 +24,6 @@ int main() {
 
   BesselNotch2Order<double, double> bes;
 
-  // TODO: generate noise on frequency about 70 Hz
   /* setup noise generator */
   std::mt19937 generator(seed());
   std::uniform_real_distribution<double> distribution(-max_amp_noise, max_amp_noise);
@@ -32,8 +33,14 @@ int main() {
     // fill data array
     double t{0};
     double noise{distribution(generator)};
+    size_t noise_counter{0};
     for (auto &value : data) {
-      noise = distribution(generator);
+      if (++noise_counter == max_noise_counter) {
+        noise_counter = 0;
+        noise = distribution(generator);
+      } else {
+        noise = 0;
+      }
       value = amp * sin(2 * std::numbers::pi * f_signal * t) + noise;
       t += dt;
     }
