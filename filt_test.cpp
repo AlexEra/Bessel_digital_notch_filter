@@ -15,12 +15,12 @@ int main() {
   const double amp = 1.0;
   const double max_noise_percentage = 0.36;
   const double max_amp_noise = amp * max_noise_percentage;
-  const double noise_freq = 70.0;
+  const double noise_freq = 146.0;
   const size_t max_noise_counter = 1 / (dt * noise_freq);
 
   std::random_device seed;
-  std::array<double, 100> data;
-  std::array<double, 100> f_data;
+  std::array<double, 200> data;
+  std::array<double, 200> f_data;
 
   BesselNotch2Order<double, double> bes;
 
@@ -46,7 +46,7 @@ int main() {
     }
   }
 
-  bes.setup(1000.0, 70.0, 0.69);
+  bes.setup(1000.0, noise_freq, 0.69);
 
   // open file to save filtered data
   std::ofstream file("data.txt", std::ofstream::binary);
