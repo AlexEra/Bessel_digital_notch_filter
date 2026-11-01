@@ -64,6 +64,9 @@ public:
    * @param new_q_f New quality factor value
    */
   void set_quality_factor(F new_q_f) {
+    if (!new_q_f || (new_q_f > 1)) {
+      return;
+    }
     q_f = 1 / new_q_f;
     coefficients_calculating();
   }
@@ -94,6 +97,9 @@ public:
    * @param new_f_s New sample frequency value
    */
   void set_sample_frequency(F new_f_s) {
+    if (!new_f_s) {
+      return;
+    }
     f_s = new_f_s;
     coefficients_calculating();
   }
@@ -112,6 +118,12 @@ public:
    * @param new_q_f New quality factor (1 / Q)
    */
   void setup(F new_f_s, F new_f_m, F new_q_f) {
+    if (
+      !new_f_s || !new_f_m || !new_q_f ||
+      (new_q_f > 1)
+    ) {
+      return;
+    }
     f_s = new_f_s;
     f_m = 2 * std::numbers::pi * new_f_m; // transforming to the rad/s
     q_f = 1 / new_q_f;
@@ -176,8 +188,8 @@ protected:
   }
 
 protected:
-  F f_s{1.0}; // sample frequency
-  F f_m{2.0 * std::numbers::pi}; // medium frequency
+  F f_s{1.0}; // sample frequency [Hz]
+  F f_m{2.0 * std::numbers::pi}; // medium frequency [rad/s]
   F q_f{1.0}; // quality factor
   F a[5], b[5]; // filter coefficients
   T y_prev[4] = {0,}; // for keeping output values with delay
